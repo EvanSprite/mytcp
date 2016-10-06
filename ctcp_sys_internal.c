@@ -143,6 +143,9 @@ int do_config(char *port) {
     }
   }
 
+  if (unix_socket) {
+    fprintf(stderr, "[OK] unix socket\n");
+  }
   /* Other configuration. */
   config->port = atoi(port);
   config->socket = s;
@@ -163,6 +166,7 @@ int do_config(char *port) {
     config->sunaddr.sun_family = AF_UNIX;
     sprintf(config->sunaddr.sun_path, "/%s", port);
     unlink(config->sunaddr.sun_path);
+    fprintf(stderr, "[OK]sun_path=%s \n", config->sunaddr.sun_path);
 
     addr = (struct sockaddr *) &config->sunaddr;
     size = sizeof(config->sunaddr);
@@ -223,10 +227,18 @@ int do_config_server(char *server) { ASSERT_CLIENT_ONLY;
 
   /* Get IP address of server. See if this is a server on the same machine. */
   in_addr_t dst_ip = ip_from_hostname(_server);
+  struct in_addr ip_addr;
+  ip_addr.s_addr = dst_ip;
+  fprintf(stderr, "IP=%s\n", inet_ntoa(ip_addr));
+
   if (dst_ip == 0)
     return -1;
-  else if (dst_ip != LOCALHOST)
-    unix_socket = false;
+  else if (dst_ip != LOCALHOST) {
+      unix_socket = false;
+      fprintf(stderr, "dsp_ip != LOCALHOST\n");
+  }
+
+    
 
   /* Set up connection details. */
   int port = server_port == 0 ? DEFAULT_PORT : server_port;
@@ -555,6 +567,8 @@ int send_tcp_conn_seg(conn_t *dst, int flags) {
   if (r < 0) {
     fprintf(stderr, "[ERROR] Could not connect\n");
     return -1;
+  } else {
+    fprintf(stderr, "[OK] Connected to the server %d", r);
   }
   return 0;
 }
@@ -1152,6 +1166,7 @@ void do_loop() {
     /* Input from stdin. Server will only send to most-recently connected
        client. */
     if (!run_program && events[STDIN_FILENO].revents & POLLIN) {
+      
       conn = get_connections();
 
       if (conn != NULL)
