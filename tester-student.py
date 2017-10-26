@@ -2,22 +2,36 @@
 
 import argparse
 import os
+<<<<<<< HEAD
 import random
+=======
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 import signal
 import subprocess
 import sys
 import time
+<<<<<<< HEAD
 import traceback
+=======
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
 from ctypes import *
 from random import choice
 from subprocess import Popen, PIPE
 
 CTCP_BINARY = "./ctcp"
+<<<<<<< HEAD
 REFERENCE_BINARY = "./reference"
 
 DEFAULT_CLIENT_PORT = str(32843)
 DEFAULT_SERVER_PORT = str(52365)
+=======
+REFERENCE_BINARY = "./tester"
+
+CLIENT_PORT = str(32843)
+SERVER_PORT = str(52365)
+REF_PORT = str(39184)
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
 # Number of seconds to wait before timing out a read from STDERR or STDOUT.
 TEST_TIMEOUT = 5
@@ -135,6 +149,7 @@ class timeout:
     signal.alarm(0)
 
 
+<<<<<<< HEAD
 def choose_ports(min_port=1025, max_port=65535):
     server_port = random.randint(min_port, max_port)
     client_port = server_port
@@ -144,6 +159,9 @@ def choose_ports(min_port=1025, max_port=65535):
 
 
 def start_server(port=DEFAULT_SERVER_PORT, flags=[], reference=False):
+=======
+def start_server(port=SERVER_PORT, flags=[], reference=False):
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
   """
   Function: start_server
   ----------------------
@@ -157,8 +175,13 @@ def start_server(port=DEFAULT_SERVER_PORT, flags=[], reference=False):
   return server
 
 
+<<<<<<< HEAD
 def start_client(server="localhost", server_port=DEFAULT_SERVER_PORT, 
                  port=DEFAULT_CLIENT_PORT, flags=[], reference=False):
+=======
+def start_client(server="localhost", server_port=SERVER_PORT, port=CLIENT_PORT,
+                 flags=[], reference=False):
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
   """
   Function: start_client
   ----------------------
@@ -298,9 +321,14 @@ def client_sends():
   data (by checking segment length).
   """
   test_str = "t35t1nG cl13nT 53nd1nG\n"
+<<<<<<< HEAD
   client_port, server_port = choose_ports()
   server = start_server(port=server_port)
   client = start_client(server_port=server_port, port=client_port)
+=======
+  server = start_server()
+  client = start_client()
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
   write_to(client, test_str)
   segments = read_segments_from(client)
@@ -311,7 +339,11 @@ def client_sends():
   # correct length.
   segment = segments[0]
   return (
+<<<<<<< HEAD
     str(segment.source_port) == client_port and
+=======
+    str(segment.source_port) == CLIENT_PORT and
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
     segment.length == CTCP_HEADER_LEN + len(test_str)
   )
 
@@ -323,9 +355,14 @@ def client_receives():
   and contains data (by checking segment length).
   """
   test_str = "t35t1nG cl13nT r3c31\/1NG\n"
+<<<<<<< HEAD
   client_port, server_port = choose_ports()
   server = start_server(port=server_port)
   client = start_client(server_port=server_port, port=client_port)
+=======
+  server = start_server()
+  client = start_client()
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
   write_to(client, test_str)
   segments = read_segments_from(server)
@@ -336,7 +373,11 @@ def client_receives():
   # the correct length.
   segment = segments[0]
   return (
+<<<<<<< HEAD
     str(segment.dest_port) == server_port and
+=======
+    str(segment.dest_port) == SERVER_PORT and
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
     segment.length == CTCP_HEADER_LEN + len(test_str)
   )
 
@@ -349,9 +390,14 @@ def correct_checksum():
   test_strs = ["ch3ck1nG c0rr3ct ch3cksu|\/|\n", "y3T an0th3r str1ng0_x\/.!&\n"]
 
   def test_checksum(test_str):
+<<<<<<< HEAD
     client_port, server_port = choose_ports()
     server = start_server(port=server_port)
     client = start_client(server_port=server_port, port=client_port)
+=======
+    server = start_server()
+    client = start_client()
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
     write_to(client, test_str)
     segments = read_segments_from(client)
@@ -360,10 +406,15 @@ def correct_checksum():
     teardown()
 
     # Start reference solution to get answers.
+<<<<<<< HEAD
     ref_client_port, ref_server_port = choose_ports()
     ref_server = start_server(port=ref_server_port, reference=True)
     ref_client = start_client(server_port=ref_server_port,
                               port=ref_client_port, reference=True)
+=======
+    ref_server = start_server(port=REF_PORT, reference=True)
+    ref_client = start_client(server_port=REF_PORT, reference=True)
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
     # Get reference checksum.
     write_to(ref_client, test_str)
@@ -390,9 +441,14 @@ def correct_header_fields():
   set correctly.
   """
   test_str = "c0rrect_!!heAd3R fi3ld5__%%!!     @\n"
+<<<<<<< HEAD
   client_port, server_port = choose_ports()
   server = start_server(port=server_port)
   client = start_client(server_port=server_port, port=client_port)
+=======
+  server = start_server()
+  client = start_client()
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
   write_to(client, test_str)
   segments = read_segments_from(client)
@@ -401,10 +457,15 @@ def correct_header_fields():
   teardown()
 
   # Start reference solution to get answers.
+<<<<<<< HEAD
   ref_client_port, ref_server_port = choose_ports()
   ref_server = start_server(port=ref_server_port, reference=True)
   ref_client = start_client(server_port=ref_server_port, 
                             port=ref_client_port, reference=True)
+=======
+  ref_server = start_server(port=REF_PORT, reference=True)
+  ref_client = start_client(server_port=REF_PORT, reference=True)
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
   # Get reference checksum.
   write_to(ref_client, test_str)
@@ -436,9 +497,14 @@ def bidirectional():
   """
   test_str_send = "5tr1NG 53nT 295 !_ __ %#^^^ .\n"
   test_str_recv = "5tr1NG r3c31v3D 224@ &&&~~~~`\n"
+<<<<<<< HEAD
   client_port, server_port = choose_ports()
   server = start_server(port=server_port)
   client = start_client(server_port=server_port, port=client_port)
+=======
+  server = start_server()
+  client = start_client()
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
   write_to(client, test_str_send)
   write_to(server, test_str_recv)
@@ -466,9 +532,14 @@ def large_data():
   Sends data twice + 1 the window size. It should all be received properly.
   """
   test_str = make_random(MAX_SEG_DATA_SIZE * 2 + 1)
+<<<<<<< HEAD
   client_port, server_port = choose_ports()
   server = start_server(port=server_port)
   client = start_client(server_port=server_port, port=client_port)
+=======
+  server = start_server()
+  client = start_client()
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
   write_to(client, test_str)
   time.sleep(TEST_TIMEOUT)
@@ -481,11 +552,16 @@ def unreliability(flag):
   Sends segments unreliably from the client to the server.
   """
   test_str = "unr3l14b13 p4ck3t!!!!!      !!!~\n"
+<<<<<<< HEAD
 
   client_port, server_port = choose_ports()
   server = start_server(port=server_port)
   client = start_client(server_port=server_port, port=client_port,
                         flags=[flag, "100"])
+=======
+  server = start_server()
+  client = start_client(flags=[flag, "100"])
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
   write_to(client, test_str)
   time.sleep(TEST_TIMEOUT)
@@ -512,11 +588,16 @@ def segment_truncated():
   """
   test_str = "n0t trunc4t3d 139482793 912847 192874 1928\n"
   truncated_str = DEBUG_TRUNCATE + "trunc4t3d 139482793 912847 192874 1928\n"
+<<<<<<< HEAD
 
   client_port, server_port = choose_ports()
   server = start_server(port=server_port)
   client = start_client(server_port=server_port, port=client_port,
                         reference=True)
+=======
+  server = start_server()
+  client = start_client(reference=True)
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
   # Send full segment.
   write_to(client, test_str)
@@ -538,9 +619,14 @@ def fin_sent():
   Checks to see that a FIN segment is sent when an EOF is read from STDIN.
   """
   test_str = "f1N s3nt\n"
+<<<<<<< HEAD
   client_port, server_port = choose_ports()
   server = start_server(port=server_port)
   client = start_client(server_port=server_port, port=client_port)
+=======
+  server = start_server()
+  client = start_client()
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
   # First write some data.
   write_to(client, test_str)
@@ -564,9 +650,14 @@ def connection_teardown():
   Makes sure connection teardown occurs when both sides send a FIN.
   """
   test_str = make_random(100)
+<<<<<<< HEAD
   client_port, server_port = choose_ports()
   server = start_server(port=server_port)
   client = start_client(server_port=server_port, port=client_port)
+=======
+  server = start_server()
+  client = start_client()
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
   # First write some data at both ends.
   write_to(client, test_str)
@@ -598,12 +689,17 @@ def larger_windows():
 
   stop_str = DEBUG_STOP + "1t'5 h4mm3r t1m3!!!!!!!!\n"
   large_strs = [make_random(596) for _ in range(20)]
+<<<<<<< HEAD
 
   client_port, server_port = choose_ports()
   server = start_server(port=server_port, reference=True, flags=["-w", str(4)])
   client = start_client(server_port=server_port, port=client_port,
                         flags=["-w", str(4)])
 
+=======
+  server = start_server(reference=True, flags=["-w", str(4)])
+  client = start_client(flags=["-w", str(4)])
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
   # Stop the server from processing anything.
   write_to(client, large_strs[0])
@@ -624,7 +720,11 @@ def larger_windows():
     return False
 
   # Look only at segments sent by client.
+<<<<<<< HEAD
   segments = [s for s in segments if s.source_port == int(client_port)]
+=======
+  segments = [s for s in segments if s.source_port == int(CLIENT_PORT)]
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
   if len(segments) == 0:
     return False
 
@@ -717,12 +817,20 @@ def run_tests(tests):
         num_success += 1
     except KeyboardInterrupt:
       raise
+<<<<<<< HEAD
     except IOError as e:
       err = "     |-> Possible segfault or early call to ctcp_destroy()"
     except IndexError as e:
       err = "     |-> Test failed but *may* pass if timeout is increased"
     except Exception as e:
       traceback.print_exc()
+=======
+    except IOError:
+      err = "     |-> Possible segfault or early call to ctcp_destroy()"
+    except IndexError:
+      err = "     |-> Test failed but *may* pass if timeout is increased"
+    except:
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
       pass
     print "." * (70 - len(test_info)),
     print "PASS" if passed else "FAIL"
@@ -775,9 +883,13 @@ def parse_args():
   # Get all the tests to run.
   if not args.tests:
     args.tests = range(1, len(TESTS) + (0 if not args.lab2 else 1))
+<<<<<<< HEAD
   if args.timeout:
     global TEST_TIMEOUT
     TEST_TIMEOUT = args.timeout
+=======
+  TEST_TIMEOUT = args.timeout
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
   if args.lab2:
     run_lab2 = True

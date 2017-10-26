@@ -143,6 +143,12 @@ int do_config(char *port) {
     }
   }
 
+<<<<<<< HEAD
+=======
+  if (unix_socket) {
+    fprintf(stderr, "[OK] unix socket\n");
+  }
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
   /* Other configuration. */
   config->port = atoi(port);
   config->socket = s;
@@ -163,6 +169,10 @@ int do_config(char *port) {
     config->sunaddr.sun_family = AF_UNIX;
     sprintf(config->sunaddr.sun_path, "/%s", port);
     unlink(config->sunaddr.sun_path);
+<<<<<<< HEAD
+=======
+    fprintf(stderr, "[OK]sun_path=%s \n", config->sunaddr.sun_path);
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
     addr = (struct sockaddr *) &config->sunaddr;
     size = sizeof(config->sunaddr);
@@ -223,10 +233,25 @@ int do_config_server(char *server) { ASSERT_CLIENT_ONLY;
 
   /* Get IP address of server. See if this is a server on the same machine. */
   in_addr_t dst_ip = ip_from_hostname(_server);
+<<<<<<< HEAD
   if (dst_ip == 0)
     return -1;
   else if (dst_ip != LOCALHOST)
     unix_socket = false;
+=======
+  struct in_addr ip_addr;
+  ip_addr.s_addr = dst_ip;
+  fprintf(stderr, "IP=%s\n", inet_ntoa(ip_addr));
+
+  if (dst_ip == 0)
+    return -1;
+  else if (dst_ip != LOCALHOST) {
+      unix_socket = false;
+      fprintf(stderr, "dsp_ip != LOCALHOST\n");
+  }
+
+    
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
 
   /* Set up connection details. */
   int port = server_port == 0 ? DEFAULT_PORT : server_port;
@@ -555,6 +580,11 @@ int send_tcp_conn_seg(conn_t *dst, int flags) {
   if (r < 0) {
     fprintf(stderr, "[ERROR] Could not connect\n");
     return -1;
+<<<<<<< HEAD
+=======
+  } else {
+    fprintf(stderr, "[OK] Connected to the server %d", r);
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
   }
   return 0;
 }
@@ -730,9 +760,15 @@ int conn_input(conn_t *conn, void *buf, size_t len) { ASSERT_CONN;
     return -1;
   }
 
+<<<<<<< HEAD
   /* Read from the appropriate place (STOUT of the associated program). */
   if (run_program)
     r = read(conn->stdout, buf, len);
+=======
+  /* Read from the appropriate place (STDIN or the associated program). */
+  if (run_program)
+    r = read(conn->stdin, buf, len);
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
   else if (unix_socket)
     r = read(STDIN_FILENO, buf, len);
   /* Add network-line endings if needed. */
@@ -895,7 +931,11 @@ int conn_send(conn_t *conn, ctcp_segment_t *segment, size_t len) { ASSERT_CONN;
 
   /* Return number of bytes sent. Need to subtract some because the return value
      is actually the size of the TCP segment instead of the cTCP segment. */
+<<<<<<< HEAD
   if (n >= (long int)TCP_HDR_SIZE)
+=======
+  if (n >= TCP_HDR_SIZE)
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
     return n - (TCP_HDR_SIZE + IP_HDR_SIZE - sizeof(ctcp_segment_t));
   return n;
 }
@@ -1152,6 +1192,10 @@ void do_loop() {
     /* Input from stdin. Server will only send to most-recently connected
        client. */
     if (!run_program && events[STDIN_FILENO].revents & POLLIN) {
+<<<<<<< HEAD
+=======
+      
+>>>>>>> 86aa51bc5757b7fb77f8f5b917b66f9ac800f6fc
       conn = get_connections();
 
       if (conn != NULL)
